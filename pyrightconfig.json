@@ -1,0 +1,6 @@
+{
+  "venvPath": ".",
+  "venv": ".venv",
+  "include": ["backend", "streamlit_app"],
+  "exclude": [".venv", "**/__pycache__"]
+}

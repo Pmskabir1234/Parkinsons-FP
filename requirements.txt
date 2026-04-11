@@ -1,0 +1,12 @@
+# Dev Experience Simulator — install: pip install -r requirements.txt
+# Backend:  cd backend && python manage.py migrate && python manage.py seed_challenges && python manage.py runserver
+# Frontend: cd streamlit_app && streamlit run app.py  (set DEV_SIM_API if API is not http://127.0.0.1:8000)
+# Backend
+Django>=4.2,<5.1
+djangorestframework>=3.14
+djangorestframework-simplejwt>=5.3
+django-cors-headers>=4.3
+
+# Frontend
+streamlit>=1.28
+requests>=2.31
