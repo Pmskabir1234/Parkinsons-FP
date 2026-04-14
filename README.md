@@ -1,84 +1,118 @@
-# Dev Simulator – Real-World Coding Simulator
+# Parkinson's Disease Predictor — Neural Network from Scratch
 
-Stop solving toy problems. Start surviving real codebases.
+A feedforward neural network built **from scratch with raw PyTorch tensors** (no `nn.Module`, no built-in optimizers) that predicts Parkinson's disease from voice biomarker data. Served via a FastAPI REST endpoint.
 
+---
 
-## What is Dev simulator?
-Dev Simulator is not LeetCode. It's not another "build a todo app" tutorial.
-Dev Simulator is a real-world coding simulator — part internship, part game, part bootcamp — where you're thrown into messy, broken, underdocumented projects and asked to survive. Built with Streamlit and Django.
-If you've ever wondered "why does this feel nothing like my actual job?" when practicing on coding platforms — DevArena is your answer.
+## How It Works
 
-## The Problem with Traditional Coding Practice
-Traditional PlatformsReal JobsClean, isolated problemsMessy, interconnected systemsWrite code from scratchUnderstand someone else's code firstGreen checkmarksStack traces at 2amPerfect documentation"It worked last week"One right answer10 acceptable tradeoffs
-DevArena bridges this gap.
+Voice recordings contain measurable acoustic properties that differ between healthy individuals and those with Parkinson's. This model learns to classify those differences using 7 key features selected through feature engineering.
 
-## Core Features
-1. Broken World Projects
-Instead of "build a todo app from scratch," you receive:
+**Architecture:** `input(7) → Linear → ReLU → Linear(6) → ReLU → Linear(4) → Sigmoid(1)`
 
-A messy, real-looking project with history and baggage
-Bugs already baked in — some obvious, some lurking
-Incomplete or misleading documentation
-A confusing codebase written by "a previous developer"
+Everything — weight initialization, forward pass, binary cross-entropy loss, gradient updates — is implemented manually without high-level abstractions.
 
-Your mission:
+---
 
-Fix the bugs
-Add a new feature
-Understand the architecture without a guide
+## Project Structure
 
+```
+parkinsons-nn/
+├── model.py                  # Neural network class (ParkinsonNet)
+├── app.py                    # FastAPI inference server
+├── test.py                   # Standalone prediction sanity check
+├── feature_engg.ipynb        # Feature selection & EDA
+├── model_training.ipynb      # Training loop & evaluation
+├── requirements.txt
+└── model/
+    ├── model.pth             # Saved weights checkpoint
+    ├── scaler.pkl            # Fitted StandardScaler
+    └── important_features.json  # Ordered list of selected features
+```
 
-This is exactly what Day 1 at any real engineering job looks like.
+---
 
+## Quickstart
 
-2.  Debugging Battles
-Timed debugging challenges that simulate real incident response:
-
-Real error logs and stack traces
-Performance bottlenecks and memory leaks
-Broken API integrations
-Race conditions and async nightmares
-
-The rule: You don't write code. You fix broken systems. Under pressure. On a clock.
-
-## Tech Stack
-Frontend : StreamlitBackend 
-
-Backend : APIDjango + Django REST Framework, SQLite3
-
-Auth: Django AllauthTask 
-
-## Getting Started
-Prerequisites
-
-Python 3.10+
-Docker & Docker Compose
-Node.js 18+ (for any JS challenges)
-
-Installation
-bash Clone the repo
-git clone https://github.com/Pmskabir1234/Dev-Simulator.git
-cd devsimulator
-
-## Create and activate virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-## Install dependencies
+```bash
+# 1. Clone and install
+git clone https://github.com/Pmskabir1234/Parkinsons-FP.git
+cd Parkinsons-FP
 pip install -r requirements.txt
 
-## Set up environment variables
-cp .env.example .env
+# 2. Run a sanity check prediction
+python test.py
 
-## Edit .env with your settings
+# 3. Start the API server
+uvicorn app:app --reload
+```
 
-## Run database migrations
-python manage.py migrate
+The API will be live at `http://127.0.0.1:8000`.
 
-## Start the Django backend
-python manage.py runserver
+---
 
-## In a separate terminal, start the Streamlit frontend
-streamlit run app.py
+## API Usage
 
-## Not built comepletely, feel free to contribute 
+**Endpoint:** `POST /predict`
+
+**Request body:**
+```json
+{
+  "data": {
+    "MDVP:Fo(Hz)": 145.32,
+    "MDVP:Flo(Hz)": 72.45,
+    "MDVP:RAP": 0.0047,
+    "spread1": -4.12,
+    "spread2": 2.35,
+    "D2": 2.98,
+    "PPE": 0.214
+  }
+}
+```
+
+**Response:**
+```json
+{
+  "prediction": 0.8423,
+  "label": "Parkinson's Detected"
+}
+```
+
+A score ≥ 0.5 is classified as **Parkinson's Detected**.
+
+Interactive docs available at `http://127.0.0.1:8000/docs`.
+
+---
+
+## Input Features
+
+| Feature | Description |
+|---|---|
+| `MDVP:Fo(Hz)` | Average vocal fundamental frequency |
+| `MDVP:Flo(Hz)` | Minimum vocal fundamental frequency |
+| `MDVP:RAP` | Relative amplitude perturbation |
+| `spread1` | Nonlinear measure of frequency variation |
+| `spread2` | Nonlinear measure of frequency variation |
+| `D2` | Correlation dimension (dynamical complexity) |
+| `PPE` | Pitch period entropy |
+
+These 7 features were selected from the full [UCI Parkinson's dataset](https://archive.ics.uci.edu/ml/datasets/parkinsons) during feature engineering.
+
+---
+
+## Dataset
+
+[UCI Parkinson's Disease Dataset](https://archive.ics.uci.edu/ml/datasets/parkinsons) — 195 voice recordings, 23 features, binary label (`status`: 1 = Parkinson's, 0 = healthy).
+
+---
+
+## Tech Stack
+
+- **PyTorch** — tensor ops, autograd
+- **scikit-learn** — StandardScaler, train/test split
+- **FastAPI + Uvicorn** — REST API
+- **Jupyter** — feature engineering & training notebooks
+
+---
+
+> **Disclaimer:** This is an academic project. Not intended for clinical use.
