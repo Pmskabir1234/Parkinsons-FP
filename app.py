@@ -49,6 +49,11 @@ def predict(input: InputData):
     with torch.no_grad():
         y_pred = model.forward(x)
 
+    label = "Parkinson's Detected" if float(y_pred.item())>0.5 else "Healthy"
+    
+
     return {
-        'prediction':float(y_pred.item())
+        'prediction':float(y_pred.item()),
+        'Label':label
+
     }
