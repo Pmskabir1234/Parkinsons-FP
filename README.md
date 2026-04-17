@@ -24,6 +24,8 @@ parkinsons-nn/
 ├── feature_engg.ipynb        # Feature selection & EDA
 ├── model_training.ipynb      # Training loop & evaluation
 ├── requirements.txt
+├── frontend
+|     ├── streamlit_app.py    # frontend file
 └── model/
     ├── model.pth             # Saved weights checkpoint
     ├── scaler.pkl            # Fitted StandardScaler
