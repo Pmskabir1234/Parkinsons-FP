@@ -5,10 +5,19 @@ import numpy as np
 from fastapi import FastAPI
 from pydantic import BaseModel
 from model import SimpleNN
+from fastapi.middleware.cors import CORSMiddleware
 
 
 app = FastAPI()
 
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 checkpoint = torch.load('model/model.pth', map_location='cpu')
 
@@ -54,6 +63,6 @@ def predict(input: InputData):
 
     return {
         'prediction':float(y_pred.item()),
-        'Label':label
+        'Label':label,
 
     }
