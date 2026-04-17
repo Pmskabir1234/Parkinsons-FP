@@ -84,6 +84,8 @@ A score ≥ 0.5 is classified as **Parkinson's Detected**.
 
 Interactive docs available at `http://127.0.0.1:8000/docs`.
 
+
+### Frontend is made with Streamlit, go to the directory and run 'python -m streamlit run streamlit_app.py'
 ---
 
 ## Input Features
@@ -104,7 +106,7 @@ These 7 features were selected from the full [UCI Parkinson's dataset](https://a
 
 ## Dataset
 
-[UCI Parkinson's Disease Dataset](https://archive.ics.uci.edu/ml/datasets/parkinsons) — 195 voice recordings, 23 features, binary label (`status`: 1 = Parkinson's, 0 = healthy).
+[UCI Parkinson's Disease Dataset](https://archive.ics.uci.edu/ml/datasets/parkinsons) — 195 voice recordings, 23 features, label (`Label`: "Parkinson's Detected" = Parkinson's, "Healthy" = healthy).
 
 ---
 
@@ -114,6 +116,7 @@ These 7 features were selected from the full [UCI Parkinson's dataset](https://a
 - **scikit-learn** — StandardScaler, train/test split
 - **FastAPI + Uvicorn** — REST API
 - **Jupyter** — feature engineering & training notebooks
+- **Streamlit** — frontend design
 
 ---
 
