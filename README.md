@@ -2,6 +2,9 @@
 
 A feedforward neural network built **from scratch with raw PyTorch tensors** (no `nn.Module`, no built-in optimizers) that predicts Parkinson's disease from voice biomarker data. Served via a FastAPI REST endpoint.
 
+NOTE: This is for learning purpose, the dataset used here is highly imbalanced and significantly insufficient for generalization.
+I picked this one intentionally, that too for learning stuff, nothing else.
+
 ---
 
 ## How It Works
@@ -80,7 +83,7 @@ The API will be live at `http://127.0.0.1:8000`.
 
 A score ≥ 0.5 is classified as **Parkinson's Detected**.
 
-Interactive docs available at `http://127.0.0.1:8000/docs`.
+Interactive docs available at `http://127.0.0.1:8000/docs`. (after you run the backend)
 
 ---
 
