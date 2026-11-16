@@ -9,6 +9,10 @@ class SimpleNN():
         self.weights3 = torch.rand(4, 1, requires_grad = True, dtype = torch.float64)
         self.bias3 = torch.zeros(1, requires_grad = True, dtype = torch.float64)
 
+    def __call__(self, X):
+        """Allow model(x) syntax — consistent with nn.Module convention."""
+        return self.forward(X)
+
     def forward(self, X):
         z1 = torch.matmul(X, self.weights1) + self.bias1
         a1 = torch.relu(z1)
