@@ -27,6 +27,8 @@ parkinsons-nn/
 ├── feature_engg.ipynb        # Feature selection & EDA
 ├── model_training.ipynb      # Training loop & evaluation
 ├── requirements.txt
+├── frontend
+|     ├── streamlit_app.py    # frontend file
 └── model/
     ├── model.pth             # Saved weights checkpoint
     ├── scaler.pkl            # Fitted StandardScaler
@@ -134,6 +136,8 @@ The training pipeline was rebuilt with several critical engineering fixes over t
 - **SimpleNN** (hand-rolled, no `nn.Module`) underperforms both baselines on this small dataset (n = 195), which is expected — a from-scratch neural network without regularisation, batch normalisation, or hyperparameter tuning struggles with limited data. This model was built as a **learning exercise** in backpropagation mechanics, not as a production classifier.
 - Fixing the **data leakage** in preprocessing was the most impactful methodological improvement — it ensures all reported metrics reflect genuine out-of-sample performance.
 
+
+### Frontend is made with Streamlit, go to the directory and run 'python -m streamlit run streamlit_app.py'
 ---
 
 ## Input Features
@@ -154,7 +158,7 @@ These 7 features were selected from the full [UCI Parkinson's dataset](https://a
 
 ## Dataset
 
-[UCI Parkinson's Disease Dataset](https://archive.ics.uci.edu/ml/datasets/parkinsons) — 195 voice recordings, 23 features, binary label (`status`: 1 = Parkinson's, 0 = healthy).
+[UCI Parkinson's Disease Dataset](https://archive.ics.uci.edu/ml/datasets/parkinsons) — 195 voice recordings, 23 features, label (`Label`: "Parkinson's Detected" = Parkinson's, "Healthy" = healthy).
 
 ---
 
@@ -164,6 +168,7 @@ These 7 features were selected from the full [UCI Parkinson's dataset](https://a
 - **scikit-learn** — StandardScaler, train/test split
 - **FastAPI + Uvicorn** — REST API
 - **Jupyter** — feature engineering & training notebooks
+- **Streamlit** — frontend design
 
 ---
 
