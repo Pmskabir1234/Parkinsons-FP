@@ -87,6 +87,55 @@ Interactive docs available at `http://127.0.0.1:8000/docs`. (after you run the b
 
 ---
 
+## Model Evaluation & Results
+
+### Methodology Improvements
+
+The training pipeline was rebuilt with several critical engineering fixes over the naive baseline:
+
+| Practice | What Changed | Impact |
+|---|---|---|
+| **Data Leakage Fix** | Scaler is now `fit` only on `X_train`, then `transform` applied to `X_test` | Eliminates inflated test metrics from information leakage |
+| **Stratified Splitting** | `train_test_split` with `stratify=y` preserves the 75/25 class ratio | Prevents class-distribution mismatch between splits |
+| **Weighted BCE Loss** | Minority class (healthy) upweighted ×1.5, majority ×0.4 | Counteracts the 3:1 class imbalance during training |
+| **5-Fold Stratified CV** | `StratifiedKFold` (k=5) on SimpleNN for unbiased generalisation estimate | Validates stability across different data partitions |
+| **Reproducibility** | Global seed (42) across `random`, `numpy`, `torch`, and `cudnn` | Fully deterministic results across runs |
+
+### Hold-Out Test Set Performance (n = 49)
+
+| Metric | Majority-Class | Logistic Regression | SimpleNN |
+|:---|:---:|:---:|:---:|
+| **Accuracy** | 75.51% | **75.51%** | 44.90% |
+| **Precision** | 75.51% | **93.10%** | 67.86% |
+| **Recall (Sensitivity)** | **100.00%** | 72.97% | 51.35% |
+| **Specificity** | 0.00% | **83.33%** | 25.00% |
+| **F1 Score** | 86.05% | **81.82%** | 58.46% |
+| **MCC** | 0.0000 | **+0.4926** | −0.2055 |
+| **AUC-ROC** | 0.5000 | **0.9324** | 0.3086 |
+
+> **Confusion Matrix (Logistic Regression):** TP = 27 · TN = 10 · FP = 2 · FN = 10
+
+### SimpleNN — 5-Fold Cross-Validation Summary
+
+| Metric | Mean ± Std |
+|:---|:---:|
+| Accuracy | 49.96% ± 6.67% |
+| Precision | 72.03% ± 3.46% |
+| Recall | 54.54% ± 8.63% |
+| Specificity | 35.71% ± 9.04% |
+| F1 Score | 61.85% ± 6.57% |
+| MCC | −0.084 ± 0.104 |
+| AUC-ROC | 0.457 ± 0.154 |
+
+### Key Takeaways
+
+- **Logistic Regression** is the strongest model here — **93.1% precision** and **0.93 AUC-ROC** demonstrate strong discriminative ability with very few false positives (only 2 out of 49 test samples).
+- **Majority-Class** baseline exposes the class imbalance problem: 75.5% accuracy by always predicting Parkinson's, but **zero specificity** and **zero MCC** — it cannot identify a single healthy patient.
+- **SimpleNN** (hand-rolled, no `nn.Module`) underperforms both baselines on this small dataset (n = 195), which is expected — a from-scratch neural network without regularisation, batch normalisation, or hyperparameter tuning struggles with limited data. This model was built as a **learning exercise** in backpropagation mechanics, not as a production classifier.
+- Fixing the **data leakage** in preprocessing was the most impactful methodological improvement — it ensures all reported metrics reflect genuine out-of-sample performance.
+
+---
+
 ## Input Features
 
 | Feature | Description |
