@@ -6,10 +6,10 @@ import pandas as pd
 API_URL = "http://127.0.0.1:8000/predict"
 
 st.set_page_config(page_title="Parkinson's Predictor", layout="wide")
-st.title("🧠 Parkinson's Disease Prediction (API-Based)")
+st.title("Parkinson's Disease Prediction (API-Based)")
 
 
-st.sidebar.header("Enter Voice Features")
+st.sidebar.header("Provide Voice Features")
 
 def get_user_input():
     return {
@@ -74,7 +74,7 @@ if st.button("Predict"):
     
     try:
         response = requests.post(API_URL, json=payload)
-
+        st.write(response.json())
         if response.status_code == 200:
             result = response.json()
 
@@ -83,51 +83,51 @@ if st.button("Predict"):
             else:
 
                 st.subheader("Prediction Result")
-                if result['Label'] == "Parkinson's Detected":
+                if result['label'] == "Parkinson's Detected":
                     st.error("Parkinson's Detected")
                 else:
                     st.success("Healthy")
-                st.write(result['prediction'])
+                st.write(f"Prbability: {result['probability']}")
                 
 
                 
-                st.subheader("📊 Feature Impact")
+                # st.subheader("Feature Impact")
 
-                df = pd.DataFrame({
-                    "Feature": list(clean_data.keys()),
-                    "Value": list(clean_data.values())
-                })
+                # df = pd.DataFrame({
+                #     "Feature": list(clean_data.keys()),
+                #     "Value": list(clean_data.values())
+                # })
 
                 
 
-                st.line_chart(df.set_index("Feature"))
+                # st.line_chart(df.set_index("Feature"))
 
                 
                 
                
-                # st.subheader("Step-by-Step Processing")
+                # # st.subheader("Step-by-Step Processing")
 
-                # c1, c2 = st.columns(2)
+                # # c1, c2 = st.columns(2)
 
-                # with c1:
-                #     st.markdown("### 1. Raw Input (Backend)")
-                #     st.write(result["raw_input"])
+                # # with c1:
+                # #     st.markdown("### 1. Raw Input (Backend)")
+                # #     st.write(result["raw_input"])
 
-                # with c2:
-                #     st.markdown("### 2. Scaled Input")
-                #     st.write(result["scaled_input"])
+                # # with c2:
+                # #     st.markdown("### 2. Scaled Input")
+                # #     st.write(result["scaled_input"])
 
                 
-                # st.subheader("📈 Feature Visualization")
+                # # st.subheader("📈 Feature Visualization")
 
-                # df = pd.DataFrame([clean_data])
-                # st.bar_chart(df.T)
-                st.markdown("""
-                            ---
-                            <div style='text-align: center; font-size: 14px; color: grey;'>
-                            Built by Kabir • ML Model API Inference & Backend Learning Project. Keep Learning and chilling!
-                            </div>
-                            """, unsafe_allow_html=True)
+                # # df = pd.DataFrame([clean_data])
+                # # st.bar_chart(df.T)
+                # st.markdown("""
+                #             ---
+                #             <div style='text-align: center; font-size: 14px; color: grey;'>
+                #             Built by Kabir • ML Model API Inference & Backend Learning Project. Keep Learning and chilling!
+                #             </div>
+                #             """, unsafe_allow_html=True)
 
 
         else:
